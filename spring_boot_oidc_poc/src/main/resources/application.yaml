@@ -8,8 +8,8 @@ spring:
         registration:
           keycloak-spring-gateway-client:
             provider: my-keycloak-provider
-            client-id: ssutils
-            client-secret: MUxOpcwU1wxHdVhrp8eK3BRmxo1Uk2sA
+            client-id: sbclient
+            client-secret: 7k5SWkblXYsJIzsH5R6QEORUY0XMCBfh
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
       resourceserver:

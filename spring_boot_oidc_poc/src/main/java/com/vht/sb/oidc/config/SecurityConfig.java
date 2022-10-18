@@ -14,7 +14,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.authorizeRequests().antMatchers("/", "/hello", "/actuator/health", "/login", "/error").permitAll()
+        return httpSecurity.authorizeRequests().antMatchers("/","/poc/**", "/hello", "/actuator/health", "/login", "/error").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login(withDefaults()).build();
