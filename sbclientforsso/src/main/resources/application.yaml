@@ -1,0 +1,32 @@
+
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak-provider:
+            issuer-uri: http://localhost:8080/auth/realms/demo
+        registration:
+          keycloak-client:
+            provider: keycloak-provider
+            client-id: sbclient
+            client-secret: 7k5SWkblXYsJIzsH5R6QEORUY0XMCBfh
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+            scope: openid
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8080/auth/realms/demo/protocol/openid-connect/certs
+  main:
+    banner-mode: off
+
+server:
+  port: 9095
+  servlet:
+    session:
+      timeout: 1m
+
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: DEBUG
+    org.springframework.security: DEBUG
