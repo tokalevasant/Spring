@@ -10,15 +10,12 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.web.AuthenticatedPrincipalOAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
@@ -32,20 +29,26 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.authorizeRequests().antMatchers("/", "/hello", "/actuator/health", "/login", "/error","/auth/**").permitAll()
-                           .anyRequest().authenticated()
-                           .and()
-                           .oauth2Login().authorizedClientRepository(authorizedClientRepository())
-                           .and()
+        return httpSecurity
+                .requiresChannel(channel -> channel.anyRequest().requiresSecure())
+                .authorizeRequests()
+                .antMatchers("/", "/hello", "/actuator/health", "/token/verify","/sso-logout", "/poc/mockPingEndpoint", "/poc/postlogout", "/error", "/auth/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .oauth2Login()
+                .authorizedClientRepository(authorizedClientRepository())
+                .and()
 //                           .oauth2ResourceServer(oauth2ResourceServer -> oauth2ResourceServer
 //                                   .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
 //                           )
-                           .build();
+                .build();
     }
 
     @Bean
-    public OAuth2AuthorizedClientRepository authorizedClientRepository( ) {
-        return new HandleOAuth2AuthorizedClientRepository(  authorizedClientService);
+    public OAuth2AuthorizedClientRepository authorizedClientRepository() {
+        return new HandleOAuth2AuthorizedClientRepository(authorizedClientService);
     }
 
     private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {

@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
  * Generate URLs that can be used with browse, curl, postman etc
  */
 @RestController
-@RequestMapping("/poc")
+@RequestMapping("/token")
 @Slf4j
 public class AuthFlowController {
 
@@ -53,7 +53,7 @@ public class AuthFlowController {
     @Autowired
     private OAuth2AuthorizedClientProvider oauth2AuthorizedClientProvider;
 
-    @GetMapping(path = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public String getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
         OAuth2AuthorizedClient client = oauth2AuthorizedClientProvider.getClient();
         OidcToken oidcToken = new OidcToken(oidcUser.getIdToken().getTokenValue(),
@@ -62,30 +62,30 @@ public class AuthFlowController {
         return OidcTokenUtils.getOidcTokenAsJson(oidcToken);
     }
 
-    @GetMapping("/startauthflow")
-    public ResponseEntity<String> testResourceParam(HttpServletResponse response) {
-        final RestTemplate restTemplate = new RestTemplate();
-        final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        final HttpClient httpClient = HttpClientBuilder.create()
-                                                       .setRedirectStrategy(new LaxRedirectStrategy())
-                                                       .build();
-        factory.setHttpClient(httpClient);
-        restTemplate.setRequestFactory(factory);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
-        map.add("response_type", "code");
-        map.add("client_id", clientId);
-        map.add("redirect_uri", authCodeRedirectUri);
-        map.add("state", state);
-        response.addCookie(getCookie("invokeAuthCodeEndPoint", "Hurray1"));
-        map.add("scope", "email profile openid");
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(authCodeEndPoint, request, String.class);
-        log.info(responseEntity.toString());
-        return responseEntity;
-    }
+//    @GetMapping("/startauthflow")
+//    public String testResourceParam(HttpServletResponse response) {
+//        final RestTemplate restTemplate = new RestTemplate();
+//        final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+//        final HttpClient httpClient = HttpClientBuilder.create()
+//                                                       .setRedirectStrategy(new LaxRedirectStrategy())
+//                                                       .build();
+//        factory.setHttpClient(httpClient);
+//        restTemplate.setRequestFactory(factory);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
+//        map.add("response_type", "code");
+//        map.add("client_id", clientId);
+//        map.add("redirect_uri", authCodeRedirectUri);
+//        map.add("state", state);
+//        response.addCookie(getCookie("invokeAuthCodeEndPoint", "Hurray1"));
+//        map.add("scope", "email profile openid");
+//        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
+//
+//         String responseEntity = restTemplate.postForObject(authCodeEndPoint, request, String.class);
+//        log.info(responseEntity);
+//        return responseEntity;
+//    }
 
     private Cookie getCookie(String name, String value) {
         Cookie cookie = new Cookie(name, value);
@@ -99,41 +99,41 @@ public class AuthFlowController {
         return cookie;
     }
 
-    @GetMapping(value = "/authCode", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String authCode(HttpServletRequest request, HttpServletResponse response,
-                           @RequestParam("state") String state,
-                           @RequestParam("session_state") String sessionState,
-                           @RequestParam("code") String code) {
-
-        log.info("RequestUri: {}", request.getRequestURL());
-        log.info("QueryString: {}", request.getQueryString());
-        response.addCookie(getCookie("AuthCodeCookieCallback", "Hurray2"));
-        final RestTemplate restTemplate = new RestTemplate();
-        final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        final HttpClient httpClient = HttpClientBuilder.create()
-                                                       .setRedirectStrategy(new LaxRedirectStrategy())
-                                                       .build();
-        factory.setHttpClient(httpClient);
-        restTemplate.setRequestFactory(factory);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("grant_type", "authorization_code");
-        map.add("client_id", clientId);
-        map.add("client_secret", clientSecret);
-        map.add("redirect_uri", authCodeRedirectUri);
-        map.add("session_state", sessionState);
-        map.add("code", code);
-        map.add("state", state);
-        //        map.add("myresource", "myresourcevalue");
-        //        map.add("scope", "email profile openid myresource:myresourcevalue");
-
-        HttpEntity<MultiValueMap<String, String>> newRequest = new HttpEntity<>(map, headers);
-
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity(tokenCodeEndPoint, newRequest, String.class);
-        log.info("Token response: {}", responseEntity.getBody());
-        return responseEntity.getBody();
-    }
+//    @GetMapping(value = "/authCode", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public String authCode(HttpServletRequest request, HttpServletResponse response,
+//                           @RequestParam("state") String state,
+//                           @RequestParam("session_state") String sessionState,
+//                           @RequestParam("code") String code) {
+//
+//        log.info("RequestUri: {}", request.getRequestURL());
+//        log.info("QueryString: {}", request.getQueryString());
+//        response.addCookie(getCookie("AuthCodeCookieCallback", "Hurray2"));
+//        final RestTemplate restTemplate = new RestTemplate();
+//        final HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+//        final HttpClient httpClient = HttpClientBuilder.create()
+//                                                       .setRedirectStrategy(new LaxRedirectStrategy())
+//                                                       .build();
+//        factory.setHttpClient(httpClient);
+//        restTemplate.setRequestFactory(factory);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+//        map.add("grant_type", "authorization_code");
+//        map.add("client_id", clientId);
+//        map.add("client_secret", clientSecret);
+//        map.add("redirect_uri", authCodeRedirectUri);
+//        map.add("session_state", sessionState);
+//        map.add("code", code);
+//        map.add("state", state);
+//        //        map.add("myresource", "myresourcevalue");
+//        //        map.add("scope", "email profile openid myresource:myresourcevalue");
+//
+//        HttpEntity<MultiValueMap<String, String>> newRequest = new HttpEntity<>(map, headers);
+//
+//        ResponseEntity<String> responseEntity = restTemplate.postForEntity(tokenCodeEndPoint, newRequest, String.class);
+//        log.info("Token response: {}", responseEntity.getBody());
+//        return responseEntity.getBody();
+//    }
 
     //    @GetMapping("/token")
     //    public String token(HttpServletRequest request) {

@@ -1,22 +1,22 @@
-# dev-us
+
 spring:
   security:
     oauth2:
       client:
         provider:
           keycloak-provider:
-            issuer-uri: https://sentinel-rhsso-dev-us.desktop-preprod.qa.aws.private.inf0.net/auth/realms/demo
+            issuer-uri: http://localhost:8080/auth/realms/demo
         registration:
           keycloak-client:
             provider: keycloak-provider
             client-id: sbpep
-            client-secret: d01dde63-46a5-4476-9a60-584e87a38837
+            client-secret: 56b9939b-8b18-44b1-a487-e84c312eca15
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
             scope: openid
       resourceserver:
         jwt:
-          jwk-set-uri: https://sentinel-rhsso-dev-us.desktop-preprod.qa.aws.private.inf0.net/auth/realms/demo/protocol/openid-connect/certs
+          jwk-set-uri: http://localhost:8080/auth/realms/demo/protocol/openid-connect/certs
   main:
     banner-mode: off
 
@@ -25,15 +25,8 @@ server:
   servlet:
     session:
       timeout: 1m
-  ssl:
-    key-store: classpath:keystore.p12
-    key-store-password: pa55wd
-    key-store-type: pkcs12
-    key-alias: springboot
-    key-password: pa55wd
-#  port: 8443
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
     org.springframework.security: DEBUG

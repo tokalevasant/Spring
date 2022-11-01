@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloController {
 
 
-    @GetMapping("/hello")
+    @GetMapping(path = {"","/hello"})
     public String hello(OAuth2AuthenticationToken token){
         return "hello";
     }
