@@ -25,7 +25,7 @@ import java.util.HashMap;
 public class LogoutController {
 
     //    private final String logoutEndPoint = "http://localhost:8080/auth/realms/demo/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:9095/poc/postlogout&id_token_hint="; //local
-    private final String logoutEndPoint = "https://sentinel-rhsso-dev-us.desktop-preprod.qa.aws.private.inf0.net/auth/realms/demo/protocol/openid-connect/logout?state=somestate&post_logout_redirect_uri=https://www.espncricinfo.com/&id_token_hint=";
+    private final String logoutEndPoint = "https://sentinel-rhsso-dev-us.desktop-preprod.qa.aws.private.inf0.net/auth/realms/demo/protocol/openid-connect/logout?state=somestate&post_logout_redirect_uri=https://localhost:9095/postlogout/&id_token_hint=";
 
     @GetMapping("/sso-logout")
     public String logout(@AuthenticationPrincipal OidcUser oidcUser,

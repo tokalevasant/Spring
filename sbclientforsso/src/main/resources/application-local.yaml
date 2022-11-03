@@ -17,16 +17,3 @@ spring:
       resourceserver:
         jwt:
           jwk-set-uri: http://localhost:8080/auth/realms/demo/protocol/openid-connect/certs
-  main:
-    banner-mode: off
-
-server:
-  port: 9095
-  servlet:
-    session:
-      timeout: 1m
-
-logging:
-  level:
-    org.springframework.web.client.RestTemplate: DEBUG
-    org.springframework.security: DEBUG
