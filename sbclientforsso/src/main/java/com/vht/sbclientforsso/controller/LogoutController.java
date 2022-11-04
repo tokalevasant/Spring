@@ -1,8 +1,10 @@
 package com.vht.sbclientforsso.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,18 +23,19 @@ import java.util.HashMap;
  * Endpoints to call corresponding endpoints on Keycloak
  */
 @RestController
+@RequestMapping("/poc")
 @Slf4j
 public class LogoutController {
 
-    //    private final String logoutEndPoint = "http://localhost:8080/auth/realms/demo/protocol/openid-connect/logout?post_logout_redirect_uri=http://localhost:9095/poc/postlogout&id_token_hint="; //local
-    private final String logoutEndPoint = "https://sentinel-rhsso-dev-us.desktop-preprod.qa.aws.private.inf0.net/auth/realms/demo/protocol/openid-connect/logout?state=somestate&post_logout_redirect_uri=https://localhost:9095/postlogout/&id_token_hint=";
+    @Value("${spring.security.oauth2.client.provider.keycloak-provider.issuer-uri}")
+    private String logoutEndpoint;
 
-    @GetMapping("/sso-logout")
+    @GetMapping("/logout")
     public String logout(@AuthenticationPrincipal OidcUser oidcUser,
                          HttpServletResponse response,
                          HttpServletRequest request) throws IOException, ServletException {
         final RestTemplate restTemplate = new RestTemplate();
-        String s = logoutEndPoint + oidcUser.getIdToken().getTokenValue();
+        String s = logoutEndpoint +"/protocol/openid-connect/logout?state=somestate&post_logout_redirect_uri=https://localhost:9095/poc/postlogout&id_token_hint=" + oidcUser.getIdToken().getTokenValue();
         log.debug("logoutendpoint: {}", s);
 //        response.sendRedirect("https://sentinel-rhsso-dev-us.desktop-preprod.qa.aws.private.inf0.net/auth/realms/demo/protocol/openid-connect/logout");
         request.logout();

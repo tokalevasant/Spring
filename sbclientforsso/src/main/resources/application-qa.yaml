@@ -5,7 +5,7 @@ spring:
       client:
         provider:
           keycloak-provider:
-            issuer-uri: https://sentinel-rhsso-qa-us.desktop-sdlc-preprod.public.inf0.net/auth/realms/ciam
+            issuer-uri: https://sso.qa.platform.refinitiv.com/auth/realms/ciam
         registration:
           keycloak-client:
             provider: keycloak-provider
@@ -16,4 +16,4 @@ spring:
             scope: openid
       resourceserver:
         jwt:
-          jwk-set-uri: https://sentinel-rhsso-qa-us.desktop-sdlc-preprod.public.inf0.net/auth/realms/ciam/protocol/openid-connect/certs
+          jwk-set-uri: https://sso.qa.platform.refinitiv.com/auth/realms/ciam/protocol/openid-connect/certs

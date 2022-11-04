@@ -18,5 +18,6 @@ server:
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: INFO
     org.springframework.security: DEBUG
+    com.vht: DEBUG

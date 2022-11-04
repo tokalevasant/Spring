@@ -32,7 +32,7 @@ public class SecurityConfig {
         return httpSecurity
                 .requiresChannel(channel -> channel.anyRequest().requiresSecure())
                 .authorizeRequests()
-                .antMatchers("/", "/hello", "/actuator/health", "/token/verify","/sso-logout", "/poc/mockPingEndpoint", "/poc/postlogout", "/error", "/auth/**")
+                .antMatchers("/", "/hello", "/actuator/health", "/login", "/poc/logout", "/poc/mockPingEndpoint", "/poc/postlogout", "/error", "/auth/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
