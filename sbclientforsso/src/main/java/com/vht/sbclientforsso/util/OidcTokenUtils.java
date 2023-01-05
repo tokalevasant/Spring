@@ -1,8 +1,12 @@
 package com.vht.sbclientforsso.util;
 
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 import com.vht.sbclientforsso.model.OidcToken;
 
+import java.text.ParseException;
 import java.util.Base64;
+import java.util.Map;
 
 public class OidcTokenUtils {
 
@@ -34,6 +38,12 @@ public class OidcTokenUtils {
         StringBuilder sb = new StringBuilder("{ 'header' : ");
         sb.append(header).append(", 'payload': ").append(payload).append(" }");
         return sb.toString();
+    }
+
+//    @SneakyThrows
+    private static Map<String, Object> getClaims(String token) throws ParseException {
+        JWT jwt = JWTParser.parse(token);
+        return jwt.getJWTClaimsSet().getClaims();
     }
 
 }
